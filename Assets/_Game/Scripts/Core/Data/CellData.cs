@@ -3,8 +3,8 @@
     public class CellData
     {
         public CellState State;
-        public readonly int MinesCountAround;
         
+        public int MinesCountAround { get; private set; }
         public bool IsFlagged { get; private set; }
         public bool IsMined => MinesCountAround == -1;
 
@@ -12,6 +12,11 @@
         {
             State = CellState.Closed;
             MinesCountAround = minesCountAround;
+        }
+
+        public void IncMinesCountAround()
+        {
+            MinesCountAround++;
         }
     }
 }

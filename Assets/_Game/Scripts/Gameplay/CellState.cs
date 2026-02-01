@@ -5,7 +5,8 @@
         Closed = 0,
         Opened = 1,
         Flagged = 2,
-        Mine = 3,
-        MineRed = 4,
+        FlaggedWrong = 3,
+        Mine = 4,
+        MineRed = 5,
     }
 }

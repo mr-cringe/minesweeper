@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Minesweeper::Minesweeper.Configs.ColorsConfig
   ColorsPerNumber:
   - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0.8, a: 1}
-  - {r: 0, g: 0.69411767, b: 0, a: 1}
-  - {r: 0.7882353, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0, b: 0.9686275, a: 1}
+  - {r: 0, g: 0.46274513, b: 0, a: 1}
+  - {r: 0.92549026, g: 0, b: 0, a: 1}

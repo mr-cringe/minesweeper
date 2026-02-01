@@ -48,9 +48,20 @@ namespace Minesweeper.Core
 
         public void GenerateCellsData(int invokedCellIndex)
         {
-            // todo split into methods?
-            var fieldSize = _gameState.FieldSize;
-            var cellDatas = new CellData[fieldSize.x * fieldSize.y];
+            var cellDatas = new CellData[_gameState.FieldSize.x * _gameState.FieldSize.y];
+            
+            CalculateMines(invokedCellIndex, cellDatas);
+            CalculateMinesAroundCount(cellDatas);
+
+            cellDatas[invokedCellIndex].State = CellState.Opened;
+
+            _field.InjectCellDatas(cellDatas);
+
+            _gameState.IsPlaying.Value = true;
+        }
+
+        private void CalculateMines(int invokedCellIndex, CellData[] cellDatas)
+        {
             var step = cellDatas.Length / _gameState.MinesCount;
             
             for (var i = 0; i < _gameState.MinesCount; i++)
@@ -71,22 +82,54 @@ namespace Minesweeper.Core
 
                 cellDatas[mineIndex] = new CellData(-1);
             }
+        }
+
+        private void CalculateMinesAroundCount(CellData[] cellDatas)
+        {
+            var fieldSize = _gameState.FieldSize;
             
-            // todo cell numbers
             for (var i = 0; i < cellDatas.Length; i++)
             {
-                if (cellDatas[i] != null)
+                var row = i / fieldSize.x;
+                var column = i % fieldSize.x;
+
+                if (cellDatas[i] == null)
+                {
+                    cellDatas[i] = new CellData(0);
+                    continue;
+                }
+                
+                if (!cellDatas[i].IsMined)
                 {
                     continue;
                 }
-                cellDatas[i] = new CellData(i % 5);
+
+                for (var r = row - 1; r < row + 2; r++)
+                {
+                    if (r < 0 || r >= fieldSize.y)
+                    {
+                        continue;
+                    }
+                    
+                    for (var c = column - 1; c < column + 2; c++)
+                    {
+                        if (c < 0 || c >= fieldSize.x)
+                        {
+                            continue;
+                        }
+
+                        var index = r * fieldSize.x + c;
+                        var cellData = cellDatas[index] ??= new CellData(0);
+
+                        if (cellData.IsMined)
+                        {
+                            continue;
+                        }
+                        
+                        cellData.IncMinesCountAround();
+                    }
+                }
             }
-
-            cellDatas[invokedCellIndex].State = CellState.Opened;
-
-            _field.InjectCellDatas(cellDatas);
-
-            _gameState.IsPlaying.Value = true;
         }
     }
 }

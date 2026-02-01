@@ -25,6 +25,8 @@ namespace Minesweeper.Core
         [SerializeField]
         private GameObject _flaggedView;
         [SerializeField]
+        private GameObject _flaggedWrongView;
+        [SerializeField]
         private GameObject _mineView;
         [SerializeField]
         private GameObject _mineRedView;
@@ -58,14 +60,6 @@ namespace Minesweeper.Core
             _countText.text = cellData.MinesCountAround < 1 ? "" : cellData.MinesCountAround.ToString();
             _countText.color = _colorsConfig.GetColor(cellData.MinesCountAround);
             
-            // todo temp logic
-            {
-                if (cellData.IsMined)
-                {
-                    CellData.State = CellState.Mine;
-                }
-            }
-            
             UpdateView();
         }
 
@@ -76,6 +70,7 @@ namespace Minesweeper.Core
                 CellState.Closed => _closedView,
                 CellState.Opened => _openedView,
                 CellState.Flagged => _flaggedView,
+                CellState.FlaggedWrong => _flaggedWrongView,
                 CellState.Mine => _mineView,
                 CellState.MineRed => _mineRedView,
                 _ => null,
@@ -90,6 +85,7 @@ namespace Minesweeper.Core
             SetViewActiveIfMatch(_closedView, targetView);
             SetViewActiveIfMatch(_openedView, targetView);
             SetViewActiveIfMatch(_flaggedView, targetView);
+            SetViewActiveIfMatch(_flaggedWrongView, targetView);
             SetViewActiveIfMatch(_mineView, targetView);
             SetViewActiveIfMatch(_mineRedView, targetView);
         }
