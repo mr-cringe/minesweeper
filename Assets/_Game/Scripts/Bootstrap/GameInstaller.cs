@@ -1,4 +1,5 @@
-﻿using Minesweeper.Core;
+﻿using Minesweeper.Configs;
+using Minesweeper.Core;
 using Minesweeper.Core.Data;
 using Minesweeper.Signals;
 using Minesweeper.UI;
@@ -9,6 +10,8 @@ namespace Minesweeper.Bootstrap
 {
     public class GameInstaller : MonoInstaller
     {
+        [SerializeField]
+        private ColorsConfig _colorsConfig;
         [SerializeField]
         private HUD _hud;
         [SerializeField]
@@ -26,6 +29,8 @@ namespace Minesweeper.Bootstrap
         {
             Container.DeclareSignal<RestartGameSignal>();
             Container.BindSignal<RestartGameSignal>().ToMethod(() => _gameManager.RestartGame());
+
+            Container.Bind<ColorsConfig>().FromInstance(_colorsConfig).AsSingle().NonLazy();
             
             // todo move gamesettings into project context??
             var gameSettings = GameSettings.CreateDefault();

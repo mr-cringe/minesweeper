@@ -80,9 +80,18 @@ namespace Minesweeper.Core
             {
                 var cell = _cellsPool.Spawn();
                 _cells.Add(cell);
-                
+
+                cell.SetIndex(i);
                 cell.transform.SetParent(_cellsContainer);
                 cell.transform.localScale = Vector3.one;
+            }
+        }
+
+        public void InjectCellDatas(CellData[] cellDatas)
+        {
+            foreach (var cell in _cells)
+            {
+                cell.InjectData(cellDatas[cell.Index]);
             }
         }
     }

@@ -1,39 +1,39 @@
 ﻿using Minesweeper.Utils;
+using UnityEngine;
 
 namespace Minesweeper.Core.Data
 {
     public class GameState
     {
+        public Vector2Int FieldSize;
+        public int MinesCount;
+        
         public ReactiveProperty<float> Timer;
         public ReactiveProperty<int> FlagsLeft;
         public ReactiveProperty<bool> IsPlaying;
         public ReactiveProperty<bool> IsDead;
 
+        private GameState()
+        {
+            Timer = new ReactiveProperty<float>();
+            FlagsLeft = new ReactiveProperty<int>();
+            IsPlaying = new ReactiveProperty<bool>();
+            IsDead = new ReactiveProperty<bool>();
+        }
+
         public static GameState Create(GameSettings settings)
         {
-            return new GameState()
-            {
-                Timer = new ReactiveProperty<float>()
-                {
-                    Value = 0,
-                },
-                FlagsLeft = new ReactiveProperty<int>()
-                {
-                    Value = settings.MinesCount,
-                },
-                IsPlaying = new ReactiveProperty<bool>()
-                {
-                    Value = false,
-                },
-                IsDead = new ReactiveProperty<bool>()
-                {
-                    Value = false,
-                },
-            };
+            var gameState = new GameState();
+            gameState.Initialize(settings);
+
+            return gameState;
         }
 
         public void Initialize(GameSettings settings)
         {
+            FieldSize = settings.FieldSize;
+            MinesCount = settings.MinesCount;
+            
             Timer.Value = 0;
             FlagsLeft.Value = settings.MinesCount;
             IsPlaying.Value = false;

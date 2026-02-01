@@ -3000,6 +3000,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e604973ca61647d3a1eef9426c0e9d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Minesweeper::Minesweeper.Bootstrap.GameInstaller
+  _colorsConfig: {fileID: 11400000, guid: 074f8da3d2ea65747823a82c4ec4c58d, type: 2}
   _hud: {fileID: 1542228301}
   _settingsPanel: {fileID: 2128155572}
   _gameManager: {fileID: 623460176}
