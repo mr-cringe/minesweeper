@@ -12,14 +12,14 @@ namespace Minesweeper.Core
         private SignalBus _signalBus;
         [Inject]
         private GameState _gameState;
-        
+
         [SerializeField]
         private TMP_Text _flagsLeftText;
         [SerializeField]
         private TMP_Text _timerText;
         [SerializeField]
         private RestartButton _restartButton;
-        
+
         private bool _isInitialized;
         private bool _isStartCompleted;
 
@@ -36,14 +36,14 @@ namespace Minesweeper.Core
         private void Start()
         {
             _isStartCompleted = true;
-            
+
             if (_isInitialized)
             {
                 Setup();
             }
         }
 
-        public void Setup()
+        private void Setup()
         {
             _gameState.FlagsLeft.Unsubscribe(SetFlagsLeftText);
             _gameState.FlagsLeft.Subscribe(SetFlagsLeftText);
@@ -51,7 +51,7 @@ namespace Minesweeper.Core
             _gameState.Timer.Subscribe(SetTimerText);
             _gameState.IsDead.Unsubscribe(_restartButton.SetDead);
             _gameState.IsDead.Subscribe(_restartButton.SetDead);
-            
+
             _restartButton.onClick.RemoveAllListeners();
             _restartButton.onClick.AddListener(() => _signalBus.Fire<RestartGameSignal>());
         }

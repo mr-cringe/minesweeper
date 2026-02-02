@@ -7,7 +7,7 @@ namespace Minesweeper.Core.Data
     {
         public Vector2Int FieldSize;
         public int MinesCount;
-        
+
         public ReactiveProperty<float> Timer;
         public ReactiveProperty<int> FlagsLeft;
         public ReactiveProperty<bool> IsPlaying;
@@ -41,7 +41,7 @@ namespace Minesweeper.Core.Data
             {
                 MinesCount = fieldSize - 1;
             }
-            
+
             Timer.Value = 0;
             FlagsLeft.Value = MinesCount;
             IsPlaying.Value = false;

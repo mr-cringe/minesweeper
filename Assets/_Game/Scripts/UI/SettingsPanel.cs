@@ -44,7 +44,7 @@ namespace Minesweeper.UI
                 _gameSettings.MinesCount,
                 x => _gameSettings.MinesCount = x
             );
-            
+
             _revealNumbersOnGameOver.onValueChanged.RemoveAllListeners();
             _revealNumbersOnGameOver.isOn = _gameSettings.RevealNumbersOnGameOver;
             _revealNumbersOnGameOver.onValueChanged.AddListener(value => _gameSettings.RevealNumbersOnGameOver = value);

@@ -12,8 +12,8 @@ namespace Minesweeper.Core
         [Inject]
         private CellsPool _cellsPool;
         [Inject]
-        private GameSettings  _gameSettings;
-        
+        private GameSettings _gameSettings;
+
         [Header("Cells")]
         [SerializeField]
         private RectTransform _panelRect;
@@ -39,7 +39,7 @@ namespace Minesweeper.Core
         private void Start()
         {
             _isStartCompleted = true;
-            
+
             if (_isInitialized)
             {
                 Setup();

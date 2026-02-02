@@ -14,7 +14,7 @@ namespace Minesweeper.Core.Data
         {
             MinMaxColumns = new Vector2Int(other.MinMaxColumns.x, other.MinMaxColumns.y);
             MinMaxRows = new Vector2Int(other.MinMaxRows.x, other.MinMaxRows.y);
-            MinMaxMinesCount  = new Vector2Int(other.MinMaxMinesCount.x, other.MinMaxMinesCount.y);
+            MinMaxMinesCount = new Vector2Int(other.MinMaxMinesCount.x, other.MinMaxMinesCount.y);
         }
     }
 }

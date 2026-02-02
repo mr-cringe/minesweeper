@@ -38,7 +38,7 @@ namespace Minesweeper.Bootstrap
             Container.BindSignal<WinSignal>().ToMethod(() => _winGamePanel.gameObject.SetActive(true));
 
             Container.Bind<ColorsConfig>().FromInstance(_colorsConfig).AsSingle().NonLazy();
-            
+
             var gameSettings = new GameSettings(_defaultSettings.DefaultSettings);
             Container.Bind<GameSettings>().FromInstance(gameSettings).AsSingle().NonLazy();
             var minMaxValues = new MinMaxValues(_defaultSettings.MinMaxValues);

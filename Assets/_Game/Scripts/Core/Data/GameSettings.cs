@@ -9,7 +9,7 @@ namespace Minesweeper.Core.Data
         public Vector2Int FieldSize;
         public int MinesCount;
         public bool RevealNumbersOnGameOver;
-        
+
         public GameSettings(GameSettings other)
         {
             FieldSize = new Vector2Int(other.FieldSize.x, other.FieldSize.y);

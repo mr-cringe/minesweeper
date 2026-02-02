@@ -9,10 +9,10 @@ namespace Minesweeper.UI
     {
         [Inject]
         private GameManager _gameManager;
-        
+
         [SerializeField]
         private Button _restartGameButton;
-        
+
         public void Initialize()
         {
             _restartGameButton.onClick.RemoveAllListeners();

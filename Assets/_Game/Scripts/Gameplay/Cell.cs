@@ -1,5 +1,4 @@
-﻿using System;
-using Minesweeper.Configs;
+﻿using Minesweeper.Configs;
 using Minesweeper.Core.Data;
 using TMPro;
 using UnityEngine;

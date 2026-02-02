@@ -9,7 +9,7 @@ namespace Minesweeper.Bootstrap
         {
             var projectContextContainer = ProjectContext.Instance.Container;
             SignalBusInstaller.Install(projectContextContainer);
-            
+
             projectContextContainer.Bind<SceneService>().FromNew().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ApplicationEntryPoint>().FromInstance(this).AsSingle().NonLazy();
         }
