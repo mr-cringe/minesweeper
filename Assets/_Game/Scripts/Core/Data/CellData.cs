@@ -5,7 +5,8 @@
         public CellState State;
         
         public int MinesCountAround { get; private set; }
-        public bool IsFlagged { get; private set; }
+        
+        public bool IsFlagged => State == CellState.Flagged;
         public bool IsMined => MinesCountAround == -1;
 
         public CellData(int minesCountAround)

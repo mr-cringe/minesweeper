@@ -11,11 +11,15 @@ namespace Minesweeper.Bootstrap
     public class GameInstaller : MonoInstaller
     {
         [SerializeField]
+        private DefaultGameSettings _defaultSettings;
+        [SerializeField]
         private ColorsConfig _colorsConfig;
         [SerializeField]
         private HUD _hud;
         [SerializeField]
         private SettingsPanel _settingsPanel;
+        [SerializeField]
+        private WinGamePanel _winGamePanel;
         [SerializeField]
         private GameManager _gameManager;
         [SerializeField]
@@ -29,16 +33,19 @@ namespace Minesweeper.Bootstrap
         {
             Container.DeclareSignal<RestartGameSignal>();
             Container.BindSignal<RestartGameSignal>().ToMethod(() => _gameManager.RestartGame());
+            Container.DeclareSignal<WinSignal>();
+            Container.BindSignal<WinSignal>().ToMethod(() => _gameManager.WinGame());
+            Container.BindSignal<WinSignal>().ToMethod(() => _winGamePanel.gameObject.SetActive(true));
 
             Container.Bind<ColorsConfig>().FromInstance(_colorsConfig).AsSingle().NonLazy();
             
-            // todo move gamesettings into project context??
-            var gameSettings = GameSettings.CreateDefault();
+            var gameSettings = new GameSettings(_defaultSettings.DefaultSettings);
             Container.Bind<GameSettings>().FromInstance(gameSettings).AsSingle().NonLazy();
             Container.Bind<GameState>().FromMethod(() => GameState.Create(gameSettings)).AsSingle().NonLazy();
 
             Container.BindInterfacesAndSelfTo<HUD>().FromInstance(_hud).AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<SettingsPanel>().FromInstance(_settingsPanel).AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<WinGamePanel>().FromInstance(_winGamePanel).AsSingle().NonLazy();
 
             Container.BindInterfacesAndSelfTo<GameManager>().FromInstance(_gameManager).AsSingle().NonLazy();
 

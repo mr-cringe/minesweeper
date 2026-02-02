@@ -1,14 +1,18 @@
-﻿using Minesweeper.Configs;
+﻿using System;
+using Minesweeper.Configs;
 using Minesweeper.Core.Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zenject;
 
 namespace Minesweeper.Core
 {
-    public class Cell : MonoBehaviour, IPoolable
+    public class Cell : MonoBehaviour, IPoolable, IPointerClickHandler
     {
+        [Inject]
+        private GameSettings _gameSettings;
         [Inject]
         private GameState _gameState;
         [Inject]
@@ -33,20 +37,77 @@ namespace Minesweeper.Core
         [SerializeField]
         private Button _button;
 
-        public CellData CellData { get; private set; }
+        private CellState _tempState;
+        private CellData _cellData;
+
         public int Index { get; private set; }
 
         public void OnSpawned()
         {
-            CellData = null;
+            _cellData = null;
+            _tempState = CellState.Closed;
             UpdateView();
-            _button.onClick.AddListener(OpenCell);
+            _button.onClick.AddListener(OnCellClicked);
         }
 
         public void OnDespawned()
         {
             _button.onClick.RemoveAllListeners();
-            CellData = null;
+            _cellData = null;
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (!_gameState.IsPlaying.Value || _gameState.IsDead.Value)
+            {
+                return;
+            }
+
+            if (eventData.button != PointerEventData.InputButton.Right)
+            {
+                return;
+            }
+
+            var currState = _cellData?.State ?? _tempState;
+
+            switch (currState)
+            {
+                case CellState.Closed:
+                    if (_gameState.FlagsLeft.Value == 0)
+                    {
+                        return;
+                    }
+
+                    _gameState.FlagsLeft.Value--;
+
+                    if (_cellData == null)
+                    {
+                        _tempState = CellState.Flagged;
+                    }
+                    else
+                    {
+                        _cellData.State = CellState.Flagged;
+                    }
+
+                    break;
+                case CellState.Flagged:
+                    _gameState.FlagsLeft.Value++;
+
+                    if (_cellData == null)
+                    {
+                        _tempState = CellState.Closed;
+                    }
+                    else
+                    {
+                        _cellData.State = CellState.Closed;
+                    }
+
+                    break;
+                default:
+                    return;
+            }
+
+            UpdateView();
         }
 
         public void SetIndex(int index)
@@ -56,16 +117,22 @@ namespace Minesweeper.Core
 
         public void InjectData(CellData cellData)
         {
-            CellData = cellData;
+            _cellData = cellData;
+
+            if (_tempState != CellState.Closed)
+            {
+                _cellData.State = _tempState;
+            }
+
             _countText.text = cellData.MinesCountAround < 1 ? "" : cellData.MinesCountAround.ToString();
             _countText.color = _colorsConfig.GetColor(cellData.MinesCountAround);
-            
+
             UpdateView();
         }
 
-        private void UpdateView()
+        public void UpdateView()
         {
-            var targetView = (CellData?.State ?? CellState.Closed) switch
+            var targetView = (_cellData?.State ?? _tempState) switch
             {
                 CellState.Closed => _closedView,
                 CellState.Opened => _openedView,
@@ -82,6 +149,13 @@ namespace Minesweeper.Core
                 return;
             }
 
+            SetViewActive(targetView);
+
+            _button.interactable = !_openedView.activeSelf;
+        }
+
+        private void SetViewActive(GameObject targetView)
+        {
             SetViewActiveIfMatch(_closedView, targetView);
             SetViewActiveIfMatch(_openedView, targetView);
             SetViewActiveIfMatch(_flaggedView, targetView);
@@ -95,14 +169,59 @@ namespace Minesweeper.Core
             view.SetActive(view == targetView);
         }
 
-        private void OpenCell()
+        private void OnCellClicked()
         {
+            if (_gameState.IsDead.Value || _gameState.IsWin.Value)
+            {
+                return;
+            }
+
             if (!_gameState.IsPlaying.Value)
             {
                 _gameManager.GenerateCellsData(Index);
+                _gameManager.OpenCellsFrom(Index);
+                _gameManager.CheckWinCondition();
+                return;
             }
-            
-            // todo
+
+            if (_cellData == null || _cellData.State != CellState.Closed)
+            {
+                return;
+            }
+
+            _gameManager.OpenCellsFrom(Index);
+            _gameManager.CheckWinCondition();
+        }
+
+        public void RevealCell(int detonatedIndex)
+        {
+            if (_cellData.IsMined)
+            {
+                if (_cellData.State == CellState.Flagged)
+                {
+                    return;
+                }
+
+                var mineView = Index == detonatedIndex ? _mineRedView : _mineView;
+                SetViewActive(mineView);
+                return;
+            }
+
+            if (_cellData.State == CellState.Flagged)
+            {
+                SetViewActive(_flaggedWrongView);
+                return;
+            }
+
+            if (!_gameSettings.RevealNumbersOnGameOver)
+            {
+                return;
+            }
+
+            if (_cellData.State != CellState.Opened)
+            {
+                SetViewActive(_openedView);
+            }
         }
     }
 }

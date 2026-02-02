@@ -12,6 +12,7 @@ namespace Minesweeper.Core.Data
         public ReactiveProperty<int> FlagsLeft;
         public ReactiveProperty<bool> IsPlaying;
         public ReactiveProperty<bool> IsDead;
+        public ReactiveProperty<bool> IsWin;
 
         private GameState()
         {
@@ -19,6 +20,7 @@ namespace Minesweeper.Core.Data
             FlagsLeft = new ReactiveProperty<int>();
             IsPlaying = new ReactiveProperty<bool>();
             IsDead = new ReactiveProperty<bool>();
+            IsWin = new ReactiveProperty<bool>();
         }
 
         public static GameState Create(GameSettings settings)
@@ -38,6 +40,7 @@ namespace Minesweeper.Core.Data
             FlagsLeft.Value = settings.MinesCount;
             IsPlaying.Value = false;
             IsDead.Value = false;
+            IsWin.Value = false;
         }
     }
 }

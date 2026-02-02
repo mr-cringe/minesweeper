@@ -18,6 +18,8 @@ namespace Minesweeper.UI
         [SerializeField]
         private TMP_InputField _minesInput;
         [SerializeField]
+        private Toggle _revealNumbersOnGameOver;
+        [SerializeField]
         private Button _closeButton;
 
         public void Initialize()
@@ -25,10 +27,12 @@ namespace Minesweeper.UI
             _columnsInput.onValueChanged.RemoveAllListeners();
             _rowsInput.onValueChanged.RemoveAllListeners();
             _minesInput.onValueChanged.RemoveAllListeners();
+            _revealNumbersOnGameOver.onValueChanged.RemoveAllListeners();
 
             _columnsInput.text = _gameSettings.FieldSize.x.ToString();
             _rowsInput.text = _gameSettings.FieldSize.y.ToString();
             _minesInput.text = _gameSettings.MinesCount.ToString();
+            _revealNumbersOnGameOver.isOn = _gameSettings.RevealNumbersOnGameOver;
 
             _columnsInput.onValueChanged.AddListener(value =>
                 {
@@ -66,6 +70,7 @@ namespace Minesweeper.UI
                     }
                 }
             );
+            _revealNumbersOnGameOver.onValueChanged.AddListener(value => _gameSettings.RevealNumbersOnGameOver = value);
 
             _closeButton.onClick.RemoveAllListeners();
             _closeButton.onClick.AddListener(() => gameObject.SetActive(false));

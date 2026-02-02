@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Minesweeper.Core.Data;
 using UnityEngine;
 using UnityEngine.UI;
@@ -84,6 +85,7 @@ namespace Minesweeper.Core
                 cell.SetIndex(i);
                 cell.transform.SetParent(_cellsContainer);
                 cell.transform.localScale = Vector3.one;
+                cell.transform.SetAsLastSibling();
             }
         }
 
@@ -92,6 +94,22 @@ namespace Minesweeper.Core
             foreach (var cell in _cells)
             {
                 cell.InjectData(cellDatas[cell.Index]);
+            }
+        }
+
+        public void ForEachCell(Action<Cell> callback)
+        {
+            foreach (var cell in _cells)
+            {
+                callback?.Invoke(cell);
+            }
+        }
+
+        public void UpdateCellsView()
+        {
+            foreach (var cell in _cells)
+            {
+                cell.UpdateView();
             }
         }
     }
