@@ -1,5 +1,5 @@
 ﻿using Minesweeper.Core.Data;
-using TMPro;
+using Minesweeper.UI.Settings;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -10,13 +10,15 @@ namespace Minesweeper.UI
     {
         [Inject]
         private GameSettings _gameSettings;
+        [Inject]
+        private MinMaxValues _minMaxValues;
 
         [SerializeField]
-        private TMP_InputField _columnsInput;
+        private SettingsElement _columns;
         [SerializeField]
-        private TMP_InputField _rowsInput;
+        private SettingsElement _rows;
         [SerializeField]
-        private TMP_InputField _minesInput;
+        private SettingsElement _mines;
         [SerializeField]
         private Toggle _revealNumbersOnGameOver;
         [SerializeField]
@@ -24,52 +26,27 @@ namespace Minesweeper.UI
 
         public void Initialize()
         {
-            _columnsInput.onValueChanged.RemoveAllListeners();
-            _rowsInput.onValueChanged.RemoveAllListeners();
-            _minesInput.onValueChanged.RemoveAllListeners();
+            _columns.Setup(
+                _minMaxValues.MinMaxColumns.x,
+                _minMaxValues.MinMaxColumns.y,
+                _gameSettings.FieldSize.x,
+                x => _gameSettings.FieldSize.x = x
+            );
+            _rows.Setup(
+                _minMaxValues.MinMaxRows.x,
+                _minMaxValues.MinMaxRows.y,
+                _gameSettings.FieldSize.y,
+                y => _gameSettings.FieldSize.y = y
+            );
+            _mines.Setup(
+                _minMaxValues.MinMaxMinesCount.x,
+                _minMaxValues.MinMaxMinesCount.y,
+                _gameSettings.MinesCount,
+                x => _gameSettings.MinesCount = x
+            );
+            
             _revealNumbersOnGameOver.onValueChanged.RemoveAllListeners();
-
-            _columnsInput.text = _gameSettings.FieldSize.x.ToString();
-            _rowsInput.text = _gameSettings.FieldSize.y.ToString();
-            _minesInput.text = _gameSettings.MinesCount.ToString();
             _revealNumbersOnGameOver.isOn = _gameSettings.RevealNumbersOnGameOver;
-
-            _columnsInput.onValueChanged.AddListener(value =>
-                {
-                    if (int.TryParse(value, out var columns))
-                    {
-                        _gameSettings.FieldSize.x = columns;
-                    }
-                    else
-                    {
-                        _columnsInput.SetTextWithoutNotify(_gameSettings.FieldSize.x.ToString());
-                    }
-                }
-            );
-            _rowsInput.onValueChanged.AddListener(value =>
-                {
-                    if (int.TryParse(value, out var rows))
-                    {
-                        _gameSettings.FieldSize.y = rows;
-                    }
-                    else
-                    {
-                        _columnsInput.SetTextWithoutNotify(_gameSettings.FieldSize.y.ToString());
-                    }
-                }
-            );
-            _minesInput.onValueChanged.AddListener(value =>
-                {
-                    if (int.TryParse(value, out var mines))
-                    {
-                        _gameSettings.MinesCount = mines;
-                    }
-                    else
-                    {
-                        _minesInput.SetTextWithoutNotify(_gameSettings.MinesCount.ToString());
-                    }
-                }
-            );
             _revealNumbersOnGameOver.onValueChanged.AddListener(value => _gameSettings.RevealNumbersOnGameOver = value);
 
             _closeButton.onClick.RemoveAllListeners();

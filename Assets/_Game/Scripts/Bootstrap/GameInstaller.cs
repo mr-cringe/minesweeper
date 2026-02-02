@@ -41,6 +41,8 @@ namespace Minesweeper.Bootstrap
             
             var gameSettings = new GameSettings(_defaultSettings.DefaultSettings);
             Container.Bind<GameSettings>().FromInstance(gameSettings).AsSingle().NonLazy();
+            var minMaxValues = new MinMaxValues(_defaultSettings.MinMaxValues);
+            Container.Bind<MinMaxValues>().FromInstance(minMaxValues).AsSingle().NonLazy();
             Container.Bind<GameState>().FromMethod(() => GameState.Create(gameSettings)).AsSingle().NonLazy();
 
             Container.BindInterfacesAndSelfTo<HUD>().FromInstance(_hud).AsSingle().NonLazy();

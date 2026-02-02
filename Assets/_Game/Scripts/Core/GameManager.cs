@@ -73,6 +73,16 @@ namespace Minesweeper.Core
 
         private void CalculateMines(int invokedCellIndex)
         {
+            if (_gameState.MinesCount >= _cellDatas.Length)
+            {
+                for (var i = 0; i < _cellDatas.Length; i++)
+                {
+                    _cellDatas[i] = new CellData(i == invokedCellIndex ? 0 : -1);
+                }
+
+                return;
+            }
+            
             var step = _cellDatas.Length / _gameState.MinesCount;
 
             for (var i = 0; i < _gameState.MinesCount; i++)

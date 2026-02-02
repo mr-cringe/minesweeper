@@ -7,5 +7,6 @@ namespace Minesweeper.Configs
     public class DefaultGameSettings : ScriptableObject
     {
         public GameSettings DefaultSettings;
+        public MinMaxValues MinMaxValues;
     }
 }

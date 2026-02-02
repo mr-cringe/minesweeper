@@ -16,3 +16,7 @@ MonoBehaviour:
     FieldSize: {x: 9, y: 9}
     MinesCount: 10
     RevealNumbersOnGameOver: 0
+  MinMaxValues:
+    MinMaxColumns: {x: 9, y: 40}
+    MinMaxRows: {x: 9, y: 30}
+    MinMaxMinesCount: {x: 1, y: 999}
