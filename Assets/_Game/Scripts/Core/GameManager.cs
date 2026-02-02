@@ -53,7 +53,7 @@ namespace Minesweeper.Core
             _gameState.Initialize(_gameSettings);
             _field.Setup();
         }
-        
+
         public void WinGame()
         {
             _gameState.IsPlaying.Value = false;
@@ -82,7 +82,8 @@ namespace Minesweeper.Core
 
                 return;
             }
-            
+
+            var minesLeft = 0;
             var step = _cellDatas.Length / _gameState.MinesCount;
 
             for (var i = 0; i < _gameState.MinesCount; i++)
@@ -101,7 +102,31 @@ namespace Minesweeper.Core
                     }
                 }
 
-                _cellDatas[mineIndex] = new CellData(-1);
+                if (_cellDatas[mineIndex] != null)
+                {
+                    minesLeft++;
+                }
+                else
+                {
+                    _cellDatas[mineIndex] = new CellData(-1);
+                }
+            }
+
+            // this is for some weird corner cases with mines count close to field size
+            for (var i = 0; i < _cellDatas.Length && minesLeft > 0; i++)
+            {
+                if (i == invokedCellIndex)
+                {
+                    continue;
+                }
+
+                if (_cellDatas[i] != null)
+                {
+                    continue;
+                }
+
+                _cellDatas[i] = new CellData(-1);
+                minesLeft--;
             }
         }
 
@@ -162,7 +187,7 @@ namespace Minesweeper.Core
         public void OpenCellsFrom(int cellIndex, bool updateView = true)
         {
             var openedCellData = _cellDatas[cellIndex];
-            
+
             if (openedCellData.IsMined)
             {
                 GameOver(cellIndex);
@@ -208,11 +233,11 @@ namespace Minesweeper.Core
                     {
                         continue;
                     }
-                    
+
                     if (cellData.State != CellState.Opened)
                     {
                         cellData.State = CellState.Opened;
-                        
+
                         if (cellData.MinesCountAround == 0)
                         {
                             chainOpenCells.Add(index);
@@ -235,7 +260,7 @@ namespace Minesweeper.Core
         public void CheckWinCondition()
         {
             var hasClosedCells = false;
-            
+
             foreach (var cellData in _cellDatas)
             {
                 if (!cellData.IsMined && cellData.State != CellState.Opened)

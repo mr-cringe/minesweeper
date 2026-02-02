@@ -35,9 +35,15 @@ namespace Minesweeper.Core.Data
         {
             FieldSize = settings.FieldSize;
             MinesCount = settings.MinesCount;
+
+            var fieldSize = FieldSize.x * FieldSize.y;
+            if (MinesCount >= fieldSize)
+            {
+                MinesCount = fieldSize - 1;
+            }
             
             Timer.Value = 0;
-            FlagsLeft.Value = settings.MinesCount;
+            FlagsLeft.Value = MinesCount;
             IsPlaying.Value = false;
             IsDead.Value = false;
             IsWin.Value = false;
